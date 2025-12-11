@@ -20,7 +20,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # OpenRouter API Key - Add your key here
-OPENROUTER_API_KEY = "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"  # Replace with your actual API key
+OPENROUTER_API_KEY = ""  # Replace with your actual API key
 
 # Create uploads folder if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
