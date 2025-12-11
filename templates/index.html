@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Copy Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+            </div>
+            <h1>Assignment Copy Detector</h1>
+            <p class="subtitle">Detect if students copied each other's assignments</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-grid">
+            <div class="upload-box">
+                <input type="file" id="file1" accept=".pdf,.docx" hidden>
+                <label for="file1" class="upload-label">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p class="upload-title">Student 1 Assignment</p>
+                    <p class="upload-subtitle">PDF or DOCX format</p>
+                    <span id="file1-name" class="file-name"></span>
+                </label>
+            </div>
+
+            <div class="upload-box">
+                <input type="file" id="file2" accept=".pdf,.docx" hidden>
+                <label for="file2" class="upload-label">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p class="upload-title">Student 2 Assignment</p>
+                    <p class="upload-subtitle">PDF or DOCX format</p>
+                    <span id="file2-name" class="file-name"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-message" class="error-message hidden"></div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button id="compareBtn" class="btn-primary" disabled>Compare Assignments</button>
+            <button id="resetBtn" class="btn-secondary hidden">Reset</button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Analyzing assignments for similarities...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="results hidden">
+            <h2>Copy Detection Results</h2>
+            
+            <div class="file-info">
+                <div class="file-badge">📄 <span id="file1-display"></span></div>
+                <div class="vs-badge">VS</div>
+                <div class="file-badge">📄 <span id="file2-display"></span></div>
+            </div>
+
+            <div class="similarity-score">
+                <div class="score-header">
+                    <span>Overall Similarity</span>
+                    <span id="score-percentage" class="score-value">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="copy-status" class="status-box"></div>
+
+            <div class="matches-summary">
+                <h3>📊 Summary</h3>
+                <p id="matches-count"></p>
+            </div>
+
+            <!-- AI Analysis -->
+            <div id="ai-analysis" class="ai-analysis hidden"></div>
+
+            <!-- Similar Lines -->
+            <div id="similar-lines" class="similar-lines">
+                <h3>🔍 Similar Lines Found</h3>
+                <div id="lines-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const file1Input = document.getElementById('file1');
+        const file2Input = document.getElementById('file2');
+        const file1Name = document.getElementById('file1-name');
+        const file2Name = document.getElementById('file2-name');
+        const compareBtn = document.getElementById('compareBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const errorMessage = document.getElementById('error-message');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+
+        let selectedFile1 = null;
+        let selectedFile2 = null;
+
+        // File selection handlers
+        file1Input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile1 = file;
+                file1Name.textContent = file.name;
+                file1Name.classList.add('selected');
+                checkFilesSelected();
+            }
+        });
+
+        file2Input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile2 = file;
+                file2Name.textContent = file.name;
+                file2Name.classList.add('selected');
+                checkFilesSelected();
+            }
+        });
+
+        function checkFilesSelected() {
+            compareBtn.disabled = !(selectedFile1 && selectedFile2);
+        }
+
+        // Compare button handler
+        compareBtn.addEventListener('click', async () => {
+            if (!selectedFile1 || !selectedFile2) {
+                showError('Please upload both assignments');
+                return;
+            }
+
+            hideError();
+            results.classList.add('hidden');
+            loading.classList.remove('hidden');
+            compareBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('file1', selectedFile1);
+            formData.append('file2', selectedFile2);
+
+            try {
+                const response = await fetch('/compare', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+
+                displayResults(data);
+                resetBtn.classList.remove('hidden');
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                loading.classList.add('hidden');
+                compareBtn.disabled = false;
+            }
+        });
+
+        // Reset button handler
+        resetBtn.addEventListener('click', () => {
+            selectedFile1 = null;
+            selectedFile2 = null;
+            file1Input.value = '';
+            file2Input.value = '';
+            file1Name.textContent = '';
+            file2Name.textContent = '';
+            file1Name.classList.remove('selected');
+            file2Name.classList.remove('selected');
+            results.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            hideError();
+            checkFilesSelected();
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+
+        function displayResults(data) {
+            const scorePercentage = document.getElementById('score-percentage');
+            const progressFill = document.getElementById('progress-fill');
+            const copyStatus = document.getElementById('copy-status');
+            const matchesCount = document.getElementById('matches-count');
+            const linesContainer = document.getElementById('lines-container');
+            const file1Display = document.getElementById('file1-display');
+            const file2Display = document.getElementById('file2-display');
+            const aiAnalysis = document.getElementById('ai-analysis');
+
+            // Display file names
+            file1Display.textContent = data.student1_file;
+            file2Display.textContent = data.student2_file;
+
+            // Similarity score
+            scorePercentage.textContent = data.similarity_percentage + '%';
+            progressFill.style.width = data.similarity_percentage + '%';
+            
+            if (data.similarity_percentage > 70) {
+                progressFill.classList.add('high');
+                progressFill.classList.remove('medium', 'low');
+                scorePercentage.style.color = '#c33';
+            } else if (data.similarity_percentage > 40) {
+                progressFill.classList.add('medium');
+                progressFill.classList.remove('high', 'low');
+                scorePercentage.style.color = '#f57f17';
+            } else {
+                progressFill.classList.add('low');
+                progressFill.classList.remove('high', 'medium');
+                scorePercentage.style.color = '#2e7d32';
+            }
+
+            // Copy status
+            if (data.likely_copied) {
+                copyStatus.className = 'status-box copied';
+                copyStatus.innerHTML = `
+                    <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    <span>⚠️ High Similarity - Likely Copied</span>
+                `;
+            } else {
+                copyStatus.className = 'status-box not-copied';
+                copyStatus.innerHTML = `
+                    <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span>✓ Low Similarity - Acceptable</span>
+                `;
+            }
+
+            // Matches summary
+            matchesCount.textContent = `Found ${data.total_matches} similar line(s) between the two assignments.`;
+
+            // AI Analysis
+            if (data.ai_analysis) {
+                aiAnalysis.classList.remove('hidden');
+                let evidenceHTML = '';
+                if (data.ai_analysis.evidence && data.ai_analysis.evidence.length > 0) {
+                    evidenceHTML = '<div class="evidence-list">';
+                    data.ai_analysis.evidence.forEach(ev => {
+                        const severityClass = ev.severity === 'high' ? 'severity-high' : 
+                                            ev.severity === 'medium' ? 'severity-medium' : 'severity-low';
+                        evidenceHTML += `
+                            <div class="evidence-item ${severityClass}">
+                                <strong>${ev.type.replace(/_/g, ' ').toUpperCase()}</strong>: ${ev.description}
+                                <span class="severity-badge">${ev.severity}</span>
+                            </div>
+                        `;
+                    });
+                    evidenceHTML += '</div>';
+                }
+                
+                aiAnalysis.innerHTML = `
+                    <h3>🤖 AI Analysis</h3>
+                    <p class="ai-conclusion">${data.ai_analysis.conclusion}</p>
+                    ${evidenceHTML}
+                `;
+            } else {
+                aiAnalysis.classList.add('hidden');
+            }
+
+            // Similar lines
+            if (data.similar_lines && data.similar_lines.length > 0) {
+                let linesHTML = '';
+                data.similar_lines.forEach((match, idx) => {
+                    linesHTML += `
+                        <div class="match-card">
+                            <div class="match-header">
+                                <span class="match-number">Match ${idx + 1}</span>
+                                <span class="match-similarity">${match.similarity}% Similar</span>
+                            </div>
+                            <div class="match-content">
+                                <div class="match-side student1">
+                                    <div class="match-label">Student 1 (Line ${match.line1_num})</div>
+                                    <div class="match-text">${escapeHtml(match.line1)}</div>
+                                </div>
+                                <div class="match-divider">↔️</div>
+                                <div class="match-side student2">
+                                    <div class="match-label">Student 2 (Line ${match.line2_num})</div>
+                                    <div class="match-text">${escapeHtml(match.line2)}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                linesContainer.innerHTML = linesHTML;
+            } else {
+                linesContainer.innerHTML = '<p class="no-matches">No significant similar lines found.</p>';
+            }
+
+            results.classList.remove('hidden');
+            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
