@@ -3,23 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment Copy Detector</title>
+    <title>Document Similarity Detector</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Animated Background Elements -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+    </div>
+
     <div class="container">
-        <!-- Header -->
+        <!-- Header with Logo -->
         <div class="header">
-            <div class="icon-wrapper">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                </svg>
+            <div class="logo-container">
+                <div class="logo-animation">
+                    <div class="logo-circle">
+                        <svg class="logo-icon" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#667eea" />
+                                    <stop offset="100%" stop-color="#764ba2" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="50" cy="50" r="40" fill="url(#gradient)" />
+                            <path d="M30,40 L45,40 L45,60 L30,60 Z" fill="white" opacity="0.9" class="doc-icon"></path>
+                            <path d="M55,40 L70,40 L70,60 L55,60 Z" fill="white" opacity="0.9" class="doc-icon"></path>
+                            <path d="M35,45 L40,45" stroke="white" stroke-width="2" class="line"></path>
+                            <path d="M35,50 L40,50" stroke="white" stroke-width="2" class="line"></path>
+                            <path d="M35,55 L40,55" stroke="white" stroke-width="2" class="line"></path>
+                            <path d="M60,45 L65,45" stroke="white" stroke-width="2" class="line"></path>
+                            <path d="M60,50 L65,50" stroke="white" stroke-width="2" class="line"></path>
+                            <path d="M60,55 L65,55" stroke="white" stroke-width="2" class="line"></path>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <h1>Assignment Copy Detector</h1>
-            <p class="subtitle">Detect if students copied each other's assignments</p>
+            
+            <h1 class="title-animation">
+                <span class="title-text">Document Similarity</span>
+                <span class="detector-word">Detector</span>
+            </h1>
+            <p class="subtitle">Detect copies. Protect integrity. Ensure authenticity.</p>
+            
+            <div class="header-stats">
+                <div class="stat-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>AI-Powered</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-rocket"></i>
+                    <span>Instant Results</span>
+                </div>
+            </div>
         </div>
 
         <!-- Upload Section -->
@@ -27,30 +71,46 @@
             <div class="upload-box">
                 <input type="file" id="file1" accept=".pdf,.docx" hidden>
                 <label for="file1" class="upload-label">
-                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    <p class="upload-title">Student 1 Assignment</p>
+                    <div class="upload-icon-wrapper">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <p class="upload-title">Document 1</p>
                     <p class="upload-subtitle">PDF or DOCX format</p>
-                    <span id="file1-name" class="file-name"></span>
+                    <span id="file1-name" class="file-name">No file selected</span>
+                    <div class="file-status">
+                        <i id="file1-status" class="fas fa-times-circle status-icon"></i>
+                    </div>
                 </label>
             </div>
 
             <div class="upload-box">
                 <input type="file" id="file2" accept=".pdf,.docx" hidden>
                 <label for="file2" class="upload-label">
-                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    <p class="upload-title">Student 2 Assignment</p>
+                    <div class="upload-icon-wrapper">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <p class="upload-title">Document 2</p>
                     <p class="upload-subtitle">PDF or DOCX format</p>
-                    <span id="file2-name" class="file-name"></span>
+                    <span id="file2-name" class="file-name">No file selected</span>
+                    <div class="file-status">
+                        <i id="file2-status" class="fas fa-times-circle status-icon"></i>
+                    </div>
                 </label>
             </div>
+        </div>
+
+        <!-- Connection Line Animation -->
+        <div class="connection-line">
+            <div class="line-path"></div>
+            <div class="scanning-dot"></div>
         </div>
 
         <!-- Error Message -->
@@ -58,59 +118,122 @@
 
         <!-- Action Buttons -->
         <div class="button-group">
-            <button id="compareBtn" class="btn-primary" disabled>Compare Assignments</button>
-            <button id="resetBtn" class="btn-secondary hidden">Reset</button>
+            <button id="compareBtn" class="btn-primary" disabled>
+                <span class="btn-text">Compare Documents</span>
+                <span class="btn-icon">
+                    <i class="fas fa-search"></i>
+                </span>
+            </button>
+            <button id="resetBtn" class="btn-secondary">
+                <span class="btn-text">Reset All</span>
+                <span class="btn-icon">
+                    <i class="fas fa-redo"></i>
+                </span>
+            </button>
         </div>
 
         <!-- Loading Spinner -->
         <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>Analyzing assignments for similarities...</p>
+            <div class="analysis-animation">
+                <div class="spinner"></div>
+                <div class="progress-dots">
+                    <div class="dot dot-1"></div>
+                    <div class="dot dot-2"></div>
+                    <div class="dot dot-3"></div>
+                </div>
+            </div>
+            <p class="loading-text">Analyzing documents for similarities<span class="ellipsis"></span></p>
         </div>
 
         <!-- Results Section -->
         <div id="results" class="results hidden">
-            <h2>Copy Detection Results</h2>
+            <div class="results-header">
+                <h2>Document Detection Results</h2>
+                <div class="results-underline"></div>
+            </div>
             
             <div class="file-info">
-                <div class="file-badge">📄 <span id="file1-display"></span></div>
-                <div class="vs-badge">VS</div>
-                <div class="file-badge">📄 <span id="file2-display"></span></div>
+                <div class="file-badge">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="file1-display" class="file-display-name"></span>
+                </div>
+                <div class="vs-badge">
+                    <div class="vs-spin">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <span>VS</span>
+                </div>
+                <div class="file-badge">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="file2-display" class="file-display-name"></span>
+                </div>
             </div>
 
             <div class="similarity-score">
                 <div class="score-header">
-                    <span>Overall Similarity</span>
-                    <span id="score-percentage" class="score-value">0%</span>
+                    <span>Overall Similarity Score</span>
+                    <div class="score-value-container">
+                        <span id="score-percentage" class="score-value">0%</span>
+                    </div>
                 </div>
                 <div class="progress-bar">
                     <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="progress-marks">
+                    <span>0%</span>
+                    <span>25%</span>
+                    <span>50%</span>
+                    <span>75%</span>
+                    <span>100%</span>
                 </div>
             </div>
 
             <div id="copy-status" class="status-box"></div>
 
             <div class="matches-summary">
-                <h3>📊 Summary</h3>
-                <p id="matches-count"></p>
+                <div class="summary-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="summary-content">
+                    <h3>📊 Analysis Summary</h3>
+                    <p id="matches-count"></p>
+                </div>
             </div>
 
             <!-- AI Analysis -->
-            <div id="ai-analysis" class="ai-analysis hidden"></div>
+            <div id="ai-analysis" class="ai-analysis hidden">
+                <div class="ai-header">
+                    <div class="ai-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>🤖 AI Analysis Report</h3>
+                </div>
+                <div id="ai-content" class="ai-content"></div>
+            </div>
 
             <!-- Similar Lines -->
             <div id="similar-lines" class="similar-lines">
-                <h3>🔍 Similar Lines Found</h3>
-                <div id="lines-container"></div>
+                <div class="lines-header">
+                    <h3><i class="fas fa-search"></i> Similar Lines Found</h3>
+                </div>
+                <div id="lines-container" class="lines-container"></div>
             </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Powered by Advanced AI Algorithms • Secure & Confidential • Real-time Analysis</p>
         </div>
     </div>
 
     <script>
+        // DOM Elements
         const file1Input = document.getElementById('file1');
         const file2Input = document.getElementById('file2');
         const file1Name = document.getElementById('file1-name');
         const file2Name = document.getElementById('file2-name');
+        const file1Status = document.getElementById('file1-status');
+        const file2Status = document.getElementById('file2-status');
         const compareBtn = document.getElementById('compareBtn');
         const resetBtn = document.getElementById('resetBtn');
         const errorMessage = document.getElementById('error-message');
@@ -122,40 +245,89 @@
 
         // File selection handlers
         file1Input.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                selectedFile1 = file;
-                file1Name.textContent = file.name;
-                file1Name.classList.add('selected');
-                checkFilesSelected();
-            }
+            handleFileSelect(e, 1);
         });
 
         file2Input.addEventListener('change', (e) => {
+            handleFileSelect(e, 2);
+        });
+
+        function handleFileSelect(e, fileNumber) {
             const file = e.target.files[0];
-            if (file) {
+            if (!file) return;
+
+            // Validate file type
+            const validTypes = ['.pdf', '.docx'];
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!validTypes.includes(fileExtension)) {
+                showError(`Invalid file type for Document ${fileNumber}. Please upload PDF or DOCX files only.`);
+                if (fileNumber === 1) {
+                    file1Input.value = '';
+                    file1Name.textContent = 'No file selected';
+                    file1Status.className = 'fas fa-times-circle status-icon';
+                    selectedFile1 = null;
+                } else {
+                    file2Input.value = '';
+                    file2Name.textContent = 'No file selected';
+                    file2Status.className = 'fas fa-times-circle status-icon';
+                    selectedFile2 = null;
+                }
+                updateCompareButton();
+                return;
+            }
+
+            // Validate file size (10MB max)
+            if (file.size > 10 * 1024 * 1024) {
+                showError(`File too large for Document ${fileNumber}. Maximum size is 10MB.`);
+                if (fileNumber === 1) {
+                    file1Input.value = '';
+                    file1Name.textContent = 'No file selected';
+                    file1Status.className = 'fas fa-times-circle status-icon';
+                    selectedFile1 = null;
+                } else {
+                    file2Input.value = '';
+                    file2Name.textContent = 'No file selected';
+                    file2Status.className = 'fas fa-times-circle status-icon';
+                    selectedFile2 = null;
+                }
+                updateCompareButton();
+                return;
+            }
+
+            if (fileNumber === 1) {
+                selectedFile1 = file;
+                file1Name.textContent = file.name;
+                file1Name.classList.add('selected');
+                file1Status.className = 'fas fa-check-circle status-icon success';
+            } else {
                 selectedFile2 = file;
                 file2Name.textContent = file.name;
                 file2Name.classList.add('selected');
-                checkFilesSelected();
+                file2Status.className = 'fas fa-check-circle status-icon success';
             }
-        });
 
-        function checkFilesSelected() {
+            hideError();
+            updateCompareButton();
+        }
+
+        function updateCompareButton() {
             compareBtn.disabled = !(selectedFile1 && selectedFile2);
         }
 
         // Compare button handler
         compareBtn.addEventListener('click', async () => {
             if (!selectedFile1 || !selectedFile2) {
-                showError('Please upload both assignments');
+                showError('Please upload both documents to compare');
                 return;
             }
 
-            hideError();
+            // Hide any previous results and show loading
             results.classList.add('hidden');
             loading.classList.remove('hidden');
             compareBtn.disabled = true;
+            resetBtn.disabled = true;
+            hideError();
 
             const formData = new FormData();
             formData.append('file1', selectedFile1);
@@ -167,41 +339,63 @@
                     body: formData
                 });
 
-                const data = await response.json();
-
                 if (!response.ok) {
-                    throw new Error(data.error || 'Analysis failed');
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to analyze documents');
                 }
 
+                const data = await response.json();
                 displayResults(data);
-                resetBtn.classList.remove('hidden');
+                
             } catch (error) {
                 showError(error.message);
-            } finally {
                 loading.classList.add('hidden');
                 compareBtn.disabled = false;
+                resetBtn.disabled = false;
             }
         });
 
         // Reset button handler
         resetBtn.addEventListener('click', () => {
+            resetAll();
+        });
+
+        function resetAll() {
+            // Reset file inputs
             selectedFile1 = null;
             selectedFile2 = null;
             file1Input.value = '';
             file2Input.value = '';
-            file1Name.textContent = '';
-            file2Name.textContent = '';
+            
+            // Reset file display
+            file1Name.textContent = 'No file selected';
+            file2Name.textContent = 'No file selected';
             file1Name.classList.remove('selected');
             file2Name.classList.remove('selected');
+            
+            // Reset status icons
+            file1Status.className = 'fas fa-times-circle status-icon';
+            file2Status.className = 'fas fa-times-circle status-icon';
+            
+            // Hide results and loading
             results.classList.add('hidden');
-            resetBtn.classList.add('hidden');
+            loading.classList.add('hidden');
+            
+            // Reset button states
+            compareBtn.disabled = true;
+            resetBtn.disabled = false;
+            
+            // Clear errors
             hideError();
-            checkFilesSelected();
-        });
+        }
 
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.classList.remove('hidden');
+            errorMessage.style.animation = 'none';
+            setTimeout(() => {
+                errorMessage.style.animation = 'shake 0.5s ease-in-out';
+            }, 10);
         }
 
         function hideError() {
@@ -209,109 +403,108 @@
         }
 
         function displayResults(data) {
+            // Hide loading
+            loading.classList.add('hidden');
+            
+            // Update UI with results
+            document.getElementById('file1-display').textContent = data.student1_file || 'Document 1';
+            document.getElementById('file2-display').textContent = data.student2_file || 'Document 2';
+            
+            // Similarity score animation
             const scorePercentage = document.getElementById('score-percentage');
             const progressFill = document.getElementById('progress-fill');
-            const copyStatus = document.getElementById('copy-status');
-            const matchesCount = document.getElementById('matches-count');
-            const linesContainer = document.getElementById('lines-container');
-            const file1Display = document.getElementById('file1-display');
-            const file2Display = document.getElementById('file2-display');
-            const aiAnalysis = document.getElementById('ai-analysis');
-
-            // Display file names
-            file1Display.textContent = data.student1_file;
-            file2Display.textContent = data.student2_file;
-
-            // Similarity score
-            scorePercentage.textContent = data.similarity_percentage + '%';
-            progressFill.style.width = data.similarity_percentage + '%';
+            const similarity = data.similarity_percentage || 0;
             
-            if (data.similarity_percentage > 70) {
-                progressFill.classList.add('high');
-                progressFill.classList.remove('medium', 'low');
-                scorePercentage.style.color = '#c33';
-            } else if (data.similarity_percentage > 40) {
-                progressFill.classList.add('medium');
-                progressFill.classList.remove('high', 'low');
-                scorePercentage.style.color = '#f57f17';
-            } else {
-                progressFill.classList.add('low');
-                progressFill.classList.remove('high', 'medium');
-                scorePercentage.style.color = '#2e7d32';
-            }
-
+            animateValue(scorePercentage, 0, similarity, 1000, '%');
+            setTimeout(() => {
+                progressFill.style.width = similarity + '%';
+                updateProgressColor(progressFill, similarity);
+            }, 100);
+            
             // Copy status
+            const copyStatus = document.getElementById('copy-status');
             if (data.likely_copied) {
                 copyStatus.className = 'status-box copied';
                 copyStatus.innerHTML = `
-                    <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
-                    <span>⚠️ High Similarity - Likely Copied</span>
+                    <div class="status-icon pulse">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="status-content">
+                        <h4>⚠️ High Similarity Detected</h4>
+                        <p>Likely copied content found (${similarity}% similar)</p>
+                    </div>
                 `;
             } else {
                 copyStatus.className = 'status-box not-copied';
                 copyStatus.innerHTML = `
-                    <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                    <span>✓ Low Similarity - Acceptable</span>
+                    <div class="status-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="status-content">
+                        <h4>✓ Acceptable Similarity</h4>
+                        <p>Content appears to be original (${similarity}% similar)</p>
+                    </div>
                 `;
             }
-
+            
             // Matches summary
-            matchesCount.textContent = `Found ${data.total_matches} similar line(s) between the two assignments.`;
-
+            const matchesCount = document.getElementById('matches-count');
+            matchesCount.textContent = `Found ${data.total_matches || 0} similar line(s) between the two assignments.`;
+            
             // AI Analysis
+            const aiAnalysis = document.getElementById('ai-analysis');
+            const aiContent = document.getElementById('ai-content');
             if (data.ai_analysis) {
                 aiAnalysis.classList.remove('hidden');
-                let evidenceHTML = '';
-                if (data.ai_analysis.evidence && data.ai_analysis.evidence.length > 0) {
-                    evidenceHTML = '<div class="evidence-list">';
-                    data.ai_analysis.evidence.forEach(ev => {
-                        const severityClass = ev.severity === 'high' ? 'severity-high' : 
-                                            ev.severity === 'medium' ? 'severity-medium' : 'severity-low';
-                        evidenceHTML += `
-                            <div class="evidence-item ${severityClass}">
-                                <strong>${ev.type.replace(/_/g, ' ').toUpperCase()}</strong>: ${ev.description}
-                                <span class="severity-badge">${ev.severity}</span>
-                            </div>
-                        `;
-                    });
-                    evidenceHTML += '</div>';
-                }
-                
-                aiAnalysis.innerHTML = `
-                    <h3>🤖 AI Analysis</h3>
-                    <p class="ai-conclusion">${data.ai_analysis.conclusion}</p>
-                    ${evidenceHTML}
+                aiContent.innerHTML = `
+                    <div class="ai-conclusion">
+                        <p>${data.ai_analysis.conclusion || 'No AI analysis available.'}</p>
+                    </div>
                 `;
             } else {
                 aiAnalysis.classList.add('hidden');
             }
-
+            
             // Similar lines
+            const linesContainer = document.getElementById('lines-container');
             if (data.similar_lines && data.similar_lines.length > 0) {
                 let linesHTML = '';
                 data.similar_lines.forEach((match, idx) => {
                     linesHTML += `
-                        <div class="match-card">
+                        <div class="match-card" style="animation-delay: ${idx * 0.1}s">
                             <div class="match-header">
-                                <span class="match-number">Match ${idx + 1}</span>
-                                <span class="match-similarity">${match.similarity}% Similar</span>
+                                <span class="match-number">
+                                    <i class="fas fa-link"></i>
+                                    Match ${idx + 1}
+                                </span>
+                                <span class="match-similarity">
+                                    <i class="fas fa-percentage"></i>
+                                    ${match.similarity || 0}% Similar
+                                </span>
                             </div>
                             <div class="match-content">
                                 <div class="match-side student1">
-                                    <div class="match-label">Student 1 (Line ${match.line1_num})</div>
-                                    <div class="match-text">${escapeHtml(match.line1)}</div>
+                                    <div class="match-label">
+                                        <i class="fas fa-user-graduate"></i>
+                                        Student 1
+                                        <span class="line-number">(Line ${match.line1_num || 'N/A'})</span>
+                                    </div>
+                                    <div class="match-text">${escapeHtml(match.line1 || 'No text available')}</div>
                                 </div>
-                                <div class="match-divider">↔️</div>
+                                <div class="match-divider">
+                                    <div class="divider-line"></div>
+                                    <div class="divider-icon">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                    </div>
+                                    <div class="divider-line"></div>
+                                </div>
                                 <div class="match-side student2">
-                                    <div class="match-label">Student 2 (Line ${match.line2_num})</div>
-                                    <div class="match-text">${escapeHtml(match.line2)}</div>
+                                    <div class="match-label">
+                                        <i class="fas fa-user-graduate"></i>
+                                        Student 2
+                                        <span class="line-number">(Line ${match.line2_num || 'N/A'})</span>
+                                    </div>
+                                    <div class="match-text">${escapeHtml(match.line2 || 'No text available')}</div>
                                 </div>
                             </div>
                         </div>
@@ -319,11 +512,54 @@
                 });
                 linesContainer.innerHTML = linesHTML;
             } else {
-                linesContainer.innerHTML = '<p class="no-matches">No significant similar lines found.</p>';
+                linesContainer.innerHTML = `
+                    <div class="no-matches">
+                        <i class="fas fa-check-circle"></i>
+                        <p>No significant similar lines found</p>
+                    </div>
+                `;
             }
-
+            
+            // Show results with animation
             results.classList.remove('hidden');
-            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            results.style.opacity = '0';
+            results.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                results.style.transition = 'all 0.5s ease-out';
+                results.style.opacity = '1';
+                results.style.transform = 'translateY(0)';
+                results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+            
+            // Re-enable buttons
+            compareBtn.disabled = false;
+            resetBtn.disabled = false;
+        }
+
+        function animateValue(element, start, end, duration, suffix = '') {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current) + suffix;
+            }, 16);
+        }
+
+        function updateProgressColor(element, value) {
+            element.classList.remove('low', 'medium', 'high');
+            if (value > 70) {
+                element.classList.add('high');
+            } else if (value > 40) {
+                element.classList.add('medium');
+            } else {
+                element.classList.add('low');
+            }
         }
 
         function escapeHtml(text) {
@@ -331,6 +567,9 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Initialize with reset
+        resetAll();
     </script>
 </body>
 </html>
