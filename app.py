@@ -319,8 +319,13 @@ ALLOWED_EXTENSIONS = {'pdf', 'docx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
+<<<<<<< HEAD
 # OpenRouter API Key from environment
 OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
+=======
+# OpenRouter API Key - Add your key here
+OPENROUTER_API_KEY = ""  # Replace with your actual API key
+>>>>>>> aa26aec239ad4ffc61de039a3ce6ccdeaa80bba5
 
 # Create uploads folder if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -591,5 +596,9 @@ def compare_assignments():
 if __name__ == '__main__':
     print("Starting Assignment Copy Checker...")
     print(f"Upload folder: {os.path.abspath(UPLOAD_FOLDER)}")
+<<<<<<< HEAD
     print(f"API Key configured: {bool(OPENROUTER_API_KEY and OPENROUTER_API_KEY.strip())}")
     app.run(debug=True, host='0.0.0.0', port=5000)
+=======
+    app.run(debug=True, host='0.0.0.0', port=5000)
+>>>>>>> aa26aec239ad4ffc61de039a3ce6ccdeaa80bba5
